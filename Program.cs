@@ -116,6 +116,7 @@ class Program
             Console.WriteLine();
             Console.WriteLine("원하시는 행동을 입력해주세요.");
             Console.Write(">> ");
+            Console.WriteLine("원하시는 행동을 입력해주세요.");
             string input = Console.ReadLine();
 
             switch (input)
