@@ -8,6 +8,7 @@ obj/
 *.user
 *.userosscache
 *.sln.docstates
+*.vs/
 
 # 기타
 *.log
