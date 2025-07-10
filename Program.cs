@@ -21,7 +21,7 @@ class Status
         Console.Write(">> ");
     }
 }
-
+  
 class Character
 {
     public int level;
