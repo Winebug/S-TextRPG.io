@@ -1,0 +1,14 @@
+# 빌드 폴더
+bin/
+obj/
+
+# Visual Studio 설정 파일
+.vscode/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# 기타
+*.log
+*.tmp
