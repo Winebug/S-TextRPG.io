@@ -41,8 +41,8 @@ class Character
     public int level;
     public string name;
     public string job;
-    public float attack;
-    public float defense;
+    public int attack;
+    public int defense;
     public int hp;
     public int gold;
 
@@ -116,7 +116,7 @@ class Program
             new Item("[일반]", "낡은 검        ", 2,  "공격력", " 무기",  "쉽게 볼 수 있는 낡은 검 입니다.                  ",600),
             new Item("[일반]", "청동 도끼      ", 5,  "공격력", " 무기",  "어디선가 사용됐던거 같은 도끼입니다.             ",1500),
             new Item("[에픽]", "진명황의 집판점", 777,"공격력", " 무기",  "던붕이들은 아는 그런 무기입니다.                 ",1000000),
-            new Item("[에픽]", "진명황의 갑옷  ", 777,"방어력", " 갑옷",  "던붕이들은 아는 그런 무기입니다.                 ",1000000)
+            new Item("[에픽]", "진명황의 갑옷  ", 777,"방어력", " 갑옷",  "던붕이들은 아는 그런 갑옷입니다.                 ",1000000)
         };
 
         bool GameManager = true;
@@ -319,13 +319,17 @@ class Program
                         bool Dun = true;
                         while (Dun)
                         {
+                            int Easy_Defense = 5;
+                            int Normal_Defense = 11;
+                            int Hard_Defense = 17;
+
                             Console.Clear();
                             Console.WriteLine("던전입장");
                             Console.WriteLine("이곳에서 던전으로 들어가기전 활동을 할 수 있습니다.");
                             Console.WriteLine();
-                            Console.WriteLine("1. 쉬운 던전     | 방어력 5이상 권장");
-                            Console.WriteLine("2. 일반 던전     | 방어력 11이상 권장");
-                            Console.WriteLine("3. 어려운 던전   | 방어력 17이상 권장");
+                            Console.WriteLine($"1. 쉬운 던전     | 방어력 {Easy_Defense}이상 권장");
+                            Console.WriteLine($"2. 일반 던전     | 방어력 {Normal_Defense}이상 권장");
+                            Console.WriteLine($"3. 어려운 던전   | 방어력 {Hard_Defense}이상 권장");
                             Console.WriteLine("0. 나가기");
                             Console.WriteLine();
                             Console.WriteLine("원하시는 행동을 입력해주세요.");
@@ -335,7 +339,99 @@ class Program
                             if (sub == "0") Dun = false;
                             else if (sub == "1")
                             {
+                                if (character.defense >= 5)
+                                {
+                                    Console.Clear();
+                                    Console.Write("던전 소탕중");
+                                    for (int i = 0; i < 3; i++)
+                                    {
+                                        Thread.Sleep(500);
+                                        Console.Write(".");
+                                    }
+                                    Console.WriteLine();
+                                    Thread.Sleep(1000);
+                                    Console.Clear();
+                                    Console.WriteLine("던전 클리어!");
+                                    Console.ReadKey();
 
+                                    Random rand=new Random();
+                                    int number = rand.Next(20,35);
+
+                                    int temp_Defense = 0;
+                                    temp_Defense = character.defense - Easy_Defense;
+
+                                    character.hp = (number - temp_Defense);
+                                }
+                                else
+                                {
+                                    Random rand = new Random();
+                                    int R_number = rand.Next(1, 11);
+
+                                    if(R_number == 1)
+                                    {
+                                        Console.Clear();
+                                        Console.Write("던전 소탕중");
+                                        for (int i = 0; i < 3; i++)
+                                        {
+                                            Thread.Sleep(500);
+                                            Console.Write(".");
+                                        }
+                                        Console.WriteLine();
+                                        Thread.Sleep(1000);
+                                        Console.Clear();
+                                        Console.WriteLine("던전 실패!");
+                                        Console.ReadKey();
+                                        character.hp = character.hp / 2;
+                                    }
+                                    else if (R_number == 3)
+                                    {
+                                        Console.Clear();
+                                        Console.Write("던전 소탕중");
+                                        for (int i = 0; i < 3; i++)
+                                        {
+                                            Thread.Sleep(500);
+                                            Console.Write(".");
+                                        }
+                                        Console.WriteLine();
+                                        Thread.Sleep(1000);
+                                        Console.Clear();
+                                        Console.WriteLine("던전 실패!");
+                                        Console.ReadKey();
+                                        character.hp = character.hp / 2;
+                                    }
+                                    else if (R_number == 5)
+                                    {
+                                        Console.Clear();
+                                        Console.Write("던전 소탕중");
+                                        for (int i = 0; i < 3; i++)
+                                        {
+                                            Thread.Sleep(500);
+                                            Console.Write(".");
+                                        }
+                                        Console.WriteLine();
+                                        Thread.Sleep(1000);
+                                        Console.Clear();
+                                        Console.WriteLine("던전 실패!");
+                                        Console.ReadKey();
+                                        character.hp = character.hp / 2;
+                                    }
+                                    else if (R_number == 7)
+                                    {
+                                        Console.Clear();
+                                        Console.Write("던전 소탕중");
+                                        for (int i = 0; i < 3; i++)
+                                        {
+                                            Thread.Sleep(500);
+                                            Console.Write(".");
+                                        }
+                                        Console.WriteLine();
+                                        Thread.Sleep(1000);
+                                        Console.Clear();
+                                        Console.WriteLine("던전 실패!");
+                                        Console.ReadKey();
+                                        character.hp = character.hp / 2;
+                                    }
+                                }
                             }
                             else if (sub == "2")
                             {
@@ -389,7 +485,7 @@ class Program
                                     Console.WriteLine();
                                     Console.WriteLine("휴식을 완료했습니다.");
                                     Console.WriteLine($"현재 체력은 {character.hp}입니다.");
-                                    Console.WriteLine();
+                                    Console.WriteLine();                                       
                                     Console.ReadKey();
 
                                 }
