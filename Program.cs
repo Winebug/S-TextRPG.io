@@ -55,7 +55,7 @@ class Character
     {
         level = 1;
         name = "곽철이";
-        job = "꽉꽉도적";
+        job = "도적";
         attack = 10;
         defense = 5;
         hp = 1000;
@@ -137,8 +137,8 @@ class Program
             new Item("[고급]", "스파르타의 갑옷", 15, "방어력", " 갑옷",  "스파르타의 전사들이 사용했다는 전설의 갑옷입니다.",3500),
             new Item("[일반]", "낡은 검        ", 2,  "공격력", " 무기",  "쉽게 볼 수 있는 낡은 검 입니다.                  ",600),
             new Item("[일반]", "청동 도끼      ", 5,  "공격력", " 무기",  "어디선가 사용됐던거 같은 도끼입니다.             ",1500),
-            new Item("[에픽]", "진명황의 집판점", 777,"공격력", " 무기",  "한때 리니지에서 엄청난 무기입니다                ",1000000),
-            new Item("[에픽]", "진명황의 갑옷  ", 777,"방어력", " 갑옷",  "진명황의 집판점과 세트효과를 제공합니다.         ",1000000)
+            new Item("[에픽]", "진명황의 집판검", 777,"공격력", " 무기",  "한때 리니지에서 엄청난 무기입니다                ",1000000),
+            new Item("[에픽]", "진명황의 갑옷  ", 777,"방어력", " 갑옷",  "진명황의 집판검과 세트효과를 제공합니다.         ",1000000)
         };
 
         bool GameManager = true;
@@ -371,7 +371,7 @@ class Program
                                     Dun = false;
                                 }
 
-                                if (character.defense >= 5)
+                                if (character.defense >= Easy_Defense)
                                 {
                                     Console.Clear();
                                     Console.Write("던전 소탕중");
@@ -491,7 +491,7 @@ class Program
 
                                                 if (character.level == 5)
                                                 {
-                                                    character.job = "꽉꽉자객";
+                                                    character.job = "꽉꽉"+character.job;
 
                                                     Console.Clear();
                                                     Console.WriteLine("오잉?");
@@ -523,7 +523,7 @@ class Program
                                                     }
                                                     Console.ReadKey();
                                                     Console.Clear();
-                                                    Console.WriteLine($"축하합니다. 당신은 레벨{character.level}달성으로 [꽉꽉자객]으로 전직하였습니다.");
+                                                    Console.WriteLine($"축하합니다. 당신은 레벨{character.level}달성으로 [{character.job}]으로 전직하였습니다.");
                                                     Console.WriteLine("전직 보너스");
                                                     Console.WriteLine($"공격력 + {10} = {character.attack += 10}");
                                                     Console.WriteLine($"방어력 + {10} = {character.defense += 10}");
@@ -616,11 +616,559 @@ class Program
                             }
                             else if (sub == "2")
                             {
+                                if (character.hp < 0)
+                                {
+                                    Console.Clear();
+                                    Console.WriteLine("체력이 없습니다. 휴식하세요");
+                                    Console.ReadKey();
+                                    Dun = false;
+                                }
 
+                                if (character.defense >= Normal_Defense)
+                                {
+                                    Console.Clear();
+                                    Console.Write("던전 소탕중");
+                                    for (int i = 0; i < 3; i++)
+                                    {
+                                        Thread.Sleep(500);
+                                        Console.Write(".");
+                                    }
+                                    Console.WriteLine();
+                                    Thread.Sleep(1000);
+                                    Console.Clear();
+                                    Console.WriteLine("던전 클리어!");
+                                    Console.ReadKey();
+
+                                    Random rand = new Random();
+                                    int number = rand.Next(20, 35);
+
+                                    int temp_Defense = 0;
+                                    int temp_attack = 0;
+
+                                    temp_Defense = character.defense - Normal_Defense;
+
+                                    int temp_hp = character.hp;
+                                    character.hp = (character.hp - number - temp_Defense);
+
+                                    if (character.hp < 0)
+                                    {
+                                        Console.Clear();
+                                        Console.WriteLine("던전 공략 중 HP가 모자라서 실패ㅜㅜ");
+                                        Console.WriteLine("체력이 없습니다. 휴식하세요");
+                                        Console.ReadKey();
+                                        Dun = false;
+                                    }
+
+                                    else
+                                    {
+                                        character.exp += 1;
+
+                                        Console.WriteLine($"잔여 HP는 {temp_hp}-({number - temp_Defense})={character.hp}입니다.");
+                                        Console.ReadKey();
+                                        Console.WriteLine();
+
+                                        Random m_rand = new Random();
+                                        float M_number = m_rand.Next((int)character.attack, (int)character.attack * 2);
+
+                                        Console.WriteLine($"던전 클리어 보상은 {Normal.Money}+보너스({M_number})%적용 = {Normal.Money + ((Normal.Money * (M_number / 100)))}G입니다");
+                                        character.gold += Normal.Money + ((Normal.Money * (M_number / 100)));
+                                        Console.WriteLine($"");
+                                        Console.WriteLine();
+                                        Console.WriteLine($"현재 플레이어 골드는 {character.gold}G입니다");
+                                        Console.ReadKey();
+
+                                        if (character.level == 1)
+                                        {
+                                            if (character.exp == 1)
+                                            {
+                                                character.defense += 1;
+                                                character.attack += 0.5;
+                                                character.exp = 0;
+                                                character.level += 1;
+                                                Console.Clear();
+                                                Console.WriteLine();
+                                                Console.WriteLine("축하합니다 레벨업입니다.");
+                                                Console.WriteLine("빠바바바바밤.");
+                                                Console.WriteLine($"당신의 레벨은{character.level}가 되었습니다.");
+                                                Console.ReadKey();
+                                            }
+                                        }
+                                        if (character.level == 2)
+                                        {
+                                            if (character.exp == 2)
+                                            {
+                                                Console.Clear();
+                                                character.defense += 1;
+                                                character.attack += 0.5;
+                                                character.exp = 0;
+                                                character.level += 1;
+                                                Console.WriteLine();
+                                                Console.WriteLine("축하합니다 레벨업입니다.");
+                                                Console.WriteLine("빠바바바바밤.");
+                                                Console.WriteLine($"당신의 레벨은{character.level}가 되었습니다.");
+                                                Console.ReadKey();
+
+                                            }
+                                        }
+                                        if (character.level == 3)
+                                        {
+                                            if (character.exp == 3)
+                                            {
+                                                Console.Clear();
+                                                character.defense += 1;
+                                                character.attack += 0.5;
+                                                character.exp = 0;
+                                                character.level += 1;
+                                                Console.WriteLine();
+                                                Console.WriteLine("축하합니다 레벨업입니다.");
+                                                Console.WriteLine("빠바바바바밤.");
+                                                Console.WriteLine($"당신의 레벨은{character.level}가 되었습니다.");
+                                                Console.ReadKey();
+
+                                            }
+                                        }
+                                        if (character.level == 4)
+                                        {
+                                            if (character.exp == 4)
+                                            {
+                                                Console.Clear();
+                                                character.defense += 1;
+                                                character.attack += 0.5;
+                                                character.exp = 0;
+                                                character.level += 1;
+                                                Console.WriteLine();
+                                                Console.WriteLine("축하합니다 레벨업입니다.");
+                                                Console.WriteLine("빠바바바바밤.");
+                                                Console.WriteLine($"당신의 레벨은{character.level}가 되었습니다.");
+                                                Console.ReadKey();
+
+                                                if (character.level == 5)
+                                                {
+                                                    character.job = "꽉꽉"+character.job;
+
+                                                    Console.Clear();
+                                                    Console.WriteLine("오잉?");
+
+                                                    for (int i = 0; i < 3; i++)
+                                                    {
+                                                        Thread.Sleep(500);
+                                                        Console.Write(".");
+                                                    }
+                                                    Console.WriteLine("내 몸에서 무슨 일이 일어나는거지?");
+                                                    Thread.Sleep(1000);
+                                                    Console.Clear();
+
+                                                    Console.WriteLine("으아아아아아아악");
+                                                    for (int i = 0; i < 1; i++)
+                                                    {
+                                                        Thread.Sleep(500);
+                                                        Console.Write("안");
+                                                    }
+                                                    for (int i = 0; i < 1; i++)
+                                                    {
+                                                        Thread.Sleep(500);
+                                                        Console.Write("돼");
+                                                    }
+                                                    for (int i = 0; i < 1; i++)
+                                                    {
+                                                        Thread.Sleep(500);
+                                                        Console.Write("!");
+                                                    }
+                                                    Console.ReadKey();
+                                                    Console.Clear();
+                                                    Console.WriteLine($"축하합니다. 당신은 레벨{character.level}달성으로 [{character.job}]으로 전직하였습니다.");
+                                                    Console.WriteLine("전직 보너스");
+                                                    Console.WriteLine($"공격력 + {10} = {character.attack += 10}");
+                                                    Console.WriteLine($"방어력 + {10} = {character.defense += 10}");
+                                                    Console.WriteLine($"체력 + {10} = {character.hp += 10}");
+                                                    Console.ReadKey();
+                                                    Console.Clear();
+
+                                                    Console.WriteLine($"[Lv. {character.level}]");
+                                                    Console.WriteLine($"{character.name} ({character.job})");
+                                                    Console.WriteLine($"공격력 : {character.attack}");
+                                                    Console.WriteLine($"방어력 : {character.defense}");
+                                                    Console.WriteLine($"체  력 : {character.hp}");
+                                                    Console.WriteLine($"Gold   : {character.gold}G");
+                                                    Console.ReadKey();
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    Random rand = new Random();
+                                    int R_number = rand.Next(1, 11);
+
+                                    if (R_number == 1)
+                                    {
+                                        Console.Clear();
+                                        Console.Write("던전 소탕중");
+                                        for (int i = 0; i < 3; i++)
+                                        {
+                                            Thread.Sleep(500);
+                                            Console.Write(".");
+                                        }
+                                        Console.WriteLine();
+                                        Thread.Sleep(1000);
+                                        Console.Clear();
+                                        Console.WriteLine("던전 실패!");
+                                        
+                                        character.hp = character.hp / 2;
+                                        Console.WriteLine($"던전 공략 실패로 체력이 50% 감소하여 {character.hp}이 되었습니다.");
+                                        Console.ReadKey();
+                                    }
+                                    else if (R_number == 3)
+                                    {
+                                        Console.Clear();
+                                        Console.Write("던전 소탕중");
+                                        for (int i = 0; i < 3; i++)
+                                        {
+                                            Thread.Sleep(500);
+                                            Console.Write(".");
+                                        }
+                                        Console.WriteLine();
+                                        Thread.Sleep(1000);
+                                        Console.Clear();
+                                        Console.WriteLine("던전 실패!");
+
+                                        character.hp = character.hp / 2;
+                                        Console.WriteLine($"던전 공략 실패로 체력이 50% 감소하여 {character.hp}이 되었습니다.");
+                                        Console.ReadKey();
+                                    }
+                                    else if (R_number == 5)
+                                    {
+                                        Console.Clear();
+                                        Console.Write("던전 소탕중");
+                                        for (int i = 0; i < 3; i++)
+                                        {
+                                            Thread.Sleep(500);
+                                            Console.Write(".");
+                                        }
+                                        Console.WriteLine();
+                                        Thread.Sleep(1000);
+                                        Console.Clear();
+                                        Console.WriteLine("던전 실패!");
+
+                                        character.hp = character.hp / 2;
+                                        Console.WriteLine($"던전 공략 실패로 체력이 50% 감소하여 {character.hp}이 되었습니다.");
+                                        Console.ReadKey();
+                                    }
+                                    else if (R_number == 7)
+                                    {
+                                        Console.Clear();
+                                        Console.Write("던전 소탕중");
+                                        for (int i = 0; i < 3; i++)
+                                        {
+                                            Thread.Sleep(500);
+                                            Console.Write(".");
+                                        }
+                                        Console.WriteLine();
+                                        Thread.Sleep(1000);
+                                        Console.Clear();
+                                        Console.WriteLine("던전 실패!");
+
+                                        character.hp = character.hp / 2;
+                                        Console.WriteLine($"던전 공략 실패로 체력이 50% 감소하여 {character.hp}이 되었습니다.");
+                                        Console.ReadKey();
+                                    }
+                                    else
+                                    {
+                                        Console.Clear();
+                                        Console.Write("던전 소탕중");
+                                        for (int i = 0; i < 3; i++)
+                                        {
+                                            Thread.Sleep(500);
+                                            Console.Write(".");
+                                        }
+                                        Console.WriteLine();
+                                        Thread.Sleep(1000);
+                                        Console.Clear();
+                                        Console.WriteLine("던전 실패!");
+
+                                        Console.WriteLine("던전 공략은 실패했지만 운좋게 체력이 달지않았습니다");
+                                        Console.ReadKey();
+                                    }
+                                }
                             }
                             else if (sub == "3")
                             {
+                                if (character.hp < 0)
+                                {
+                                    Console.Clear();
+                                    Console.WriteLine("체력이 없습니다. 휴식하세요");
+                                    Console.ReadKey();
+                                    Dun = false;
+                                }
 
+                                if (character.defense >= Hard_Defense)
+                                {
+                                    Console.Clear();
+                                    Console.Write("던전 소탕중");
+                                    for (int i = 0; i < 3; i++)
+                                    {
+                                        Thread.Sleep(500);
+                                        Console.Write(".");
+                                    }
+                                    Console.WriteLine();
+                                    Thread.Sleep(1000);
+                                    Console.Clear();
+                                    Console.WriteLine("던전 클리어!");
+                                    Console.ReadKey();
+
+                                    Random rand = new Random();
+                                    int number = rand.Next(20, 35);
+
+                                    int temp_Defense = 0;
+                                    int temp_attack = 0;
+
+                                    temp_Defense = character.defense - Hard_Defense;
+
+                                    int temp_hp = character.hp;
+                                    character.hp = (character.hp - number - temp_Defense);
+
+                                    if (character.hp < 0)
+                                    {
+                                        Console.Clear();
+                                        Console.WriteLine("던전 공략 중 HP가 모자라서 실패ㅜㅜ");
+                                        Console.WriteLine("체력이 없습니다. 휴식하세요");
+                                        Console.ReadKey();
+                                        Dun = false;
+                                    }
+
+                                    else
+                                    {
+                                        character.exp += 1;
+
+                                        Console.WriteLine($"잔여 HP는 {temp_hp}-({number - temp_Defense})={character.hp}입니다.");
+                                        Console.ReadKey();
+                                        Console.WriteLine();
+
+                                        Random m_rand = new Random();
+                                        float M_number = m_rand.Next((int)character.attack, (int)character.attack * 2);
+
+                                        Console.WriteLine($"던전 클리어 보상은 {Easy.Money}+보너스({M_number})%적용 = {Hard.Money + ((Hard.Money * (M_number / 100)))}G입니다");
+                                        character.gold += Hard.Money + ((Hard.Money * (M_number / 100)));
+                                        Console.WriteLine($"");
+                                        Console.WriteLine();
+                                        Console.WriteLine($"현재 플레이어 골드는 {character.gold}G입니다");
+                                        Console.ReadKey();
+
+                                        if (character.level == 1)
+                                        {
+                                            if (character.exp == 1)
+                                            {
+                                                character.defense += 1;
+                                                character.attack += 0.5;
+                                                character.exp = 0;
+                                                character.level += 1;
+                                                Console.Clear();
+                                                Console.WriteLine();
+                                                Console.WriteLine("축하합니다 레벨업입니다.");
+                                                Console.WriteLine("빠바바바바밤.");
+                                                Console.WriteLine($"당신의 레벨은{character.level}가 되었습니다.");
+                                                Console.ReadKey();
+                                            }
+                                        }
+                                        if (character.level == 2)
+                                        {
+                                            if (character.exp == 2)
+                                            {
+                                                Console.Clear();
+                                                character.defense += 1;
+                                                character.attack += 0.5;
+                                                character.exp = 0;
+                                                character.level += 1;
+                                                Console.WriteLine();
+                                                Console.WriteLine("축하합니다 레벨업입니다.");
+                                                Console.WriteLine("빠바바바바밤.");
+                                                Console.WriteLine($"당신의 레벨은{character.level}가 되었습니다.");
+                                                Console.ReadKey();
+
+                                            }
+                                        }
+                                        if (character.level == 3)
+                                        {
+                                            if (character.exp == 3)
+                                            {
+                                                Console.Clear();
+                                                character.defense += 1;
+                                                character.attack += 0.5;
+                                                character.exp = 0;
+                                                character.level += 1;
+                                                Console.WriteLine();
+                                                Console.WriteLine("축하합니다 레벨업입니다.");
+                                                Console.WriteLine("빠바바바바밤.");
+                                                Console.WriteLine($"당신의 레벨은{character.level}가 되었습니다.");
+                                                Console.ReadKey();
+
+                                            }
+                                        }
+                                        if (character.level == 4)
+                                        {
+                                            if (character.exp == 4)
+                                            {
+                                                Console.Clear();
+                                                character.defense += 1;
+                                                character.attack += 0.5;
+                                                character.exp = 0;
+                                                character.level += 1;
+                                                Console.WriteLine();
+                                                Console.WriteLine("축하합니다 레벨업입니다.");
+                                                Console.WriteLine("빠바바바바밤.");
+                                                Console.WriteLine($"당신의 레벨은{character.level}가 되었습니다.");
+                                                Console.ReadKey();
+
+                                                if (character.level == 5)
+                                                {
+                                                    character.job += "꽉꽉";
+
+                                                    Console.Clear();
+                                                    Console.WriteLine("오잉?");
+
+                                                    for (int i = 0; i < 3; i++)
+                                                    {
+                                                        Thread.Sleep(500);
+                                                        Console.Write(".");
+                                                    }
+                                                    Console.WriteLine("내 몸에서 무슨 일이 일어나는거지?");
+                                                    Thread.Sleep(1000);
+                                                    Console.Clear();
+
+                                                    Console.WriteLine("으아아아아아아악");
+                                                    for (int i = 0; i < 1; i++)
+                                                    {
+                                                        Thread.Sleep(500);
+                                                        Console.Write("안");
+                                                    }
+                                                    for (int i = 0; i < 1; i++)
+                                                    {
+                                                        Thread.Sleep(500);
+                                                        Console.Write("돼");
+                                                    }
+                                                    for (int i = 0; i < 1; i++)
+                                                    {
+                                                        Thread.Sleep(500);
+                                                        Console.Write("!");
+                                                    }
+                                                    Console.ReadKey();
+                                                    Console.Clear();
+                                                    Console.WriteLine($"축하합니다. 당신은 레벨{character.level}달성으로 [{character.job}]으로 전직하였습니다.");
+                                                    Console.WriteLine("전직 보너스");
+                                                    Console.WriteLine($"공격력 + {10} = {character.attack += 10}");
+                                                    Console.WriteLine($"방어력 + {10} = {character.defense += 10}");
+                                                    Console.WriteLine($"체력 + {10} = {character.hp += 10}");
+                                                    Console.ReadKey();
+                                                    Console.Clear();
+
+                                                    Console.WriteLine($"[Lv. {character.level}]");
+                                                    Console.WriteLine($"{character.name} ({character.job})");
+                                                    Console.WriteLine($"공격력 : {character.attack}");
+                                                    Console.WriteLine($"방어력 : {character.defense}");
+                                                    Console.WriteLine($"체  력 : {character.hp}");
+                                                    Console.WriteLine($"Gold   : {character.gold}G");
+                                                    Console.ReadKey();
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    Random rand = new Random();
+                                    int R_number = rand.Next(1, 11);
+
+                                    if (R_number == 1)
+                                    {
+                                        Console.Clear();
+                                        Console.Write("던전 소탕중");
+                                        for (int i = 0; i < 3; i++)
+                                        {
+                                            Thread.Sleep(500);
+                                            Console.Write(".");
+                                        }
+                                        Console.WriteLine();
+                                        Thread.Sleep(1000);
+                                        Console.Clear();
+                                        Console.WriteLine("던전 실패!");
+
+                                        character.hp = character.hp / 2;
+                                        Console.WriteLine($"던전 공략 실패로 체력이 50% 감소하여 {character.hp}이 되었습니다.");
+                                        Console.ReadKey();
+                                    }
+                                    else if (R_number == 3)
+                                    {
+                                        Console.Clear();
+                                        Console.Write("던전 소탕중");
+                                        for (int i = 0; i < 3; i++)
+                                        {
+                                            Thread.Sleep(500);
+                                            Console.Write(".");
+                                        }
+                                        Console.WriteLine();
+                                        Thread.Sleep(1000);
+                                        Console.Clear();
+                                        Console.WriteLine("던전 실패!");
+
+                                        character.hp = character.hp / 2;
+                                        Console.WriteLine($"던전 공략 실패로 체력이 50% 감소하여 {character.hp}이 되었습니다.");
+                                        Console.ReadKey();
+                                    }
+                                    else if (R_number == 5)
+                                    {
+                                        Console.Clear();
+                                        Console.Write("던전 소탕중");
+                                        for (int i = 0; i < 3; i++)
+                                        {
+                                            Thread.Sleep(500);
+                                            Console.Write(".");
+                                        }
+                                        Console.WriteLine();
+                                        Thread.Sleep(1000);
+                                        Console.Clear();
+                                        Console.WriteLine("던전 실패!");
+
+                                        character.hp = character.hp / 2;
+                                        Console.WriteLine($"던전 공략 실패로 체력이 50% 감소하여 {character.hp}이 되었습니다.");
+                                        Console.ReadKey();
+                                    }
+                                    else if (R_number == 7)
+                                    {
+                                        Console.Clear();
+                                        Console.Write("던전 소탕중");
+                                        for (int i = 0; i < 3; i++)
+                                        {
+                                            Thread.Sleep(500);
+                                            Console.Write(".");
+                                        }
+                                        Console.WriteLine();
+                                        Thread.Sleep(1000);
+                                        Console.Clear();
+                                        Console.WriteLine("던전 실패!");
+
+                                        character.hp = character.hp / 2;
+                                        Console.WriteLine($"던전 공략 실패로 체력이 50% 감소하여 {character.hp}이 되었습니다.");
+                                        Console.ReadKey();
+                                    }
+                                    else
+                                    {
+                                        Console.Clear();
+                                        Console.Write("던전 소탕중");
+                                        for (int i = 0; i < 3; i++)
+                                        {
+                                            Thread.Sleep(500);
+                                            Console.Write(".");
+                                        }
+                                        Console.WriteLine();
+                                        Thread.Sleep(1000);
+                                        Console.Clear();
+                                        Console.WriteLine("던전 실패!");
+
+                                        Console.WriteLine("던전 공략은 실패했지만 운좋게 체력이 달지않았습니다");
+                                        Console.ReadKey();
+                                    }
+                                }
                             }
                             else
                             {
