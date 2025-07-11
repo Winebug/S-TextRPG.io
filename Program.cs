@@ -44,7 +44,7 @@ class Character
     public int attack;
     public int defense;
     public int hp;
-    public int gold;
+    public float gold;
 
     public List<Item> inventory = new List<Item>();
 
@@ -58,7 +58,7 @@ class Character
         attack = 10;
         defense = 5;
         hp = 100;
-        gold = 1500000000;
+        gold = 1500;
     }
 }
 
@@ -100,12 +100,32 @@ class Item
     }
 }
 
+    struct ClearMoney
+{
+    public int Money;
+
+    public ClearMoney(int money)
+    {
+        Money = money;
+    }
+    public static ClearMoney Easy = new ClearMoney(1000);
+    public static ClearMoney Normal = new ClearMoney(1700);
+    public static ClearMoney Hard = new ClearMoney(2500);
+}
+
 class Program
 {
     static void Main(string[] args)
     {
         Character character = new Character();
         Status status = new Status();
+
+        
+        ClearMoney Easy = new ClearMoney(1000);
+        ClearMoney Normal = new ClearMoney(1700);
+        ClearMoney Hard = new ClearMoney(2500);
+
+
 
         List<Item> itemList = new List<Item>()
         {
@@ -115,8 +135,8 @@ class Program
             new Item("[고급]", "스파르타의 갑옷", 15, "방어력", " 갑옷",  "스파르타의 전사들이 사용했다는 전설의 갑옷입니다.",3500),
             new Item("[일반]", "낡은 검        ", 2,  "공격력", " 무기",  "쉽게 볼 수 있는 낡은 검 입니다.                  ",600),
             new Item("[일반]", "청동 도끼      ", 5,  "공격력", " 무기",  "어디선가 사용됐던거 같은 도끼입니다.             ",1500),
-            new Item("[에픽]", "진명황의 집판점", 777,"공격력", " 무기",  "던붕이들은 아는 그런 무기입니다.                 ",1000000),
-            new Item("[에픽]", "진명황의 갑옷  ", 777,"방어력", " 갑옷",  "던붕이들은 아는 그런 갑옷입니다.                 ",1000000)
+            new Item("[에픽]", "진명황의 집판점", 777,"공격력", " 무기",  "한때 리니지에서 엄청난 무기입니다                ",1000000),
+            new Item("[에픽]", "진명황의 갑옷  ", 777,"방어력", " 갑옷",  "진명황의 집판점과 세트효과를 제공합니다.         ",1000000)
         };
 
         bool GameManager = true;
@@ -339,6 +359,14 @@ class Program
                             if (sub == "0") Dun = false;
                             else if (sub == "1")
                             {
+                                if (character.hp < 0)
+                                {
+                                    Console.Clear();
+                                    Console.WriteLine("체력이 없습니다. 휴식하세요");
+                                    Console.ReadKey();
+                                    Dun = false;
+                                }
+
                                 if (character.defense >= 5)
                                 {
                                     Console.Clear();
@@ -358,9 +386,37 @@ class Program
                                     int number = rand.Next(20,35);
 
                                     int temp_Defense = 0;
+                                    int temp_attack = 0;
+
                                     temp_Defense = character.defense - Easy_Defense;
 
-                                    character.hp = (number - temp_Defense);
+                                    int temp_hp = character.hp;
+                                    character.hp = (character.hp - number - temp_Defense);
+
+                                    if (character.hp < 0)
+                                    {
+                                        Console.Clear();
+                                        Console.WriteLine("던전 공략 실패ㅜㅜ");
+                                        Console.WriteLine("체력이 없습니다. 휴식하세요");
+                                        Console.ReadKey();
+                                        Dun = false;
+                                    }
+
+                                    else
+                                    {
+                                        Console.WriteLine($"잔여 HP는 {temp_hp}-({number - temp_Defense})={character.hp}입니다.");
+                                        Console.ReadKey();
+                                        Console.WriteLine();
+
+                                        Random m_rand = new Random();
+                                        float M_number = m_rand.Next(character.attack, character.attack * 2);
+
+                                        Console.WriteLine($"던전 클리어 보상은 {Easy.Money}+보너스({M_number})%적용 = {Easy.Money + ((Easy.Money * (M_number / 100)))}G입니다");
+                                        character.gold += Easy.Money + ((Easy.Money * (M_number / 100)));
+                                        Console.WriteLine();
+                                        Console.WriteLine($"현재 플레이어 골드는 {character.gold}G입니다");
+                                        Console.ReadKey();
+                                    }
                                 }
                                 else
                                 {
